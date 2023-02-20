@@ -16,20 +16,21 @@
 
 # Un constructor.
 # Los métodos de acceso (set,get) para el nuevo atributo.
-# En esta ocasión los titulares de este tipo de cuenta tienen que ser mayor de edad., 
-# por lo tanto hay que crear un método esTitularValido() que devuelve verdadero si el titular es mayor de edad.
+# En esta ocasión los titulares de este tipo de cuenta tienen que ser mayor de edad.
 # Además la retirada de dinero sólo se podrá hacer si el titular es válido.
 # El método mostrar() debe devolver el mensaje de “Cuenta Joven” y la bonificación de la cuenta.
 class Cuenta:
-    def __init__(self,titular,cantidad) -> None:
-        self._titular = ""
-        self._cantidad = "0"
+    def __init__(self,titular="",cantidad=0) -> None:
+        self._titular = titular
+        self._cantidad = cantidad
 
     @property
     def Titular(self):
         return self._titular 
-    Titular.setter()
-
+    @Titular.setter
+    def Titular(self,titular):
+        self._titular=titular
+            
     @property
     def Cantidad(self):
         return self._cantidad
@@ -44,3 +45,34 @@ class Cuenta:
 
     def Mostrar(self):
         return (f"Titular: {self._titular}, Cantidad: {self._cantidad}")
+
+class Joven(Cuenta):
+    def __init__(self, titular="", edad=0, cantidad=0, bonificacion=0.0) -> None:
+        super().__init__(titular, cantidad)
+        self._edad = edad
+        self._bonificacion = bonificacion
+
+    @property
+    def Edad(self):
+        return self._edad 
+    @Edad.setter
+    def Edad(self,edad):
+        if edad < 18:
+            print("Edad no valida")
+        else:
+            self._edad=edad
+    
+    @property
+    def Bonificacion(self):
+        return self._bonificacion 
+    @Bonificacion.setter
+    def Bonificacion(self,bonificacion):
+        self._bonificacion=bonificacion
+    
+    def Retirar(self, retirar, edad):
+        if edad >= 18 and self._cantidad > retirar:
+            return super().Retirar(retirar)
+        else:
+            return ("Su edad o el retiro es invalido")
+    def Mostrar(self):
+        return (f"Cuenta Joven \nTitular: {self._titular}, Edad: {self._edad}, Cantidad: {self._cantidad}, Bonificación: {self._bonificacion}")
