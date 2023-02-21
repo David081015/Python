@@ -3,10 +3,10 @@ miCuenta = C.Cuenta
 miJoven = C.Joven
 
 miCuenta("David", 1000)
-miCuenta.Titular("David Castillo")
-miCuenta.Ingresar(500)
+miCuenta.Titular = "David Castillo"
+miCuenta.Ingresar(miCuenta,500)
 print(miCuenta.Cantidad())
-miCuenta.Retirar(500)
+miCuenta.Retirar(miCuenta,500)
 miCuenta.Mostrar()
 
 miJoven("Sofia", 19, 1500, 2.0)

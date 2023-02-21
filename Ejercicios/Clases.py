@@ -36,12 +36,12 @@ class Cuenta:
         return self._cantidad
     
     def Ingresar(self, ingresar):
-        self._cantidad += ingresar
-        return ("Se ingreso con exito")
+        Cantidad = self.Cantidad
+        Cantidad += int(ingresar)
+        self._cantidad = Cantidad
     
     def Retirar(self, retirar):
         self._cantidad -= retirar
-        return ("Se retiro con exito")
 
     def Mostrar(self):
         return (f"Titular: {self._titular}, Cantidad: {self._cantidad}")
