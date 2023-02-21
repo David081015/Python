@@ -36,18 +36,16 @@ class Cuenta:
         return self._cantidad
     
     def Ingresar(self, ingresar):
-        Cantidad = self.Cantidad
-        Cantidad += int(ingresar)
-        self._cantidad = Cantidad
+        self._cantidad = self._cantidad + ingresar
     
     def Retirar(self, retirar):
-        self._cantidad -= retirar
+        self._cantidad = self._cantidad - retirar
 
     def Mostrar(self):
         return (f"Titular: {self._titular}, Cantidad: {self._cantidad}")
 
 class Joven(Cuenta):
-    def __init__(self, titular="", edad=0, cantidad=0, bonificacion=0.0) -> None:
+    def __init__(self, titular="", cantidad=0, edad=0, bonificacion=0.0) -> None:
         super().__init__(titular, cantidad)
         self._edad = edad
         self._bonificacion = bonificacion
