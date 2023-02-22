@@ -4,15 +4,11 @@
 # Imprimir ambas matrices en formato de matriz.
 
 Entrada = [[0] * 4 for i in range(5)]
-
-for i in range(5):
-    for j in range(4):
-        Entrada[i][j] = int(input("Ingrese un número para la posición [{},{}]: ".format(i,j)))
-
 Salida = [[0] * 4 for i in range(5)]
 
 for i in range(5):
     for j in range(4):
+        Entrada[i][j] = int(input("Ingrese un número para la posición [{},{}]: ".format(i,j)))
         if Entrada[i][j] % 3 == 0 and Entrada[i][j] % 5 == 0:
             Salida[i][j] = 3
         elif Entrada[i][j] % 3 == 0:
