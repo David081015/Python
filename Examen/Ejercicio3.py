@@ -7,6 +7,8 @@ while(Salir == False):
     else:
         Salir = True
 Resultado = Barra - Calidad
-if(Resultado==1):
+if(Resultado==1 and Barra==16):
+    Resultado = 4
+elif(Resultado==1):
     Resultado = 3
 print(f"Barra: {Barra} Segmentos: {Resultado}")
