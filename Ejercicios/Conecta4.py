@@ -4,67 +4,81 @@
 #vertical o diagonal. Si se acaba el espacio en el tablero es empate, 
 #de lo contrario mostrara un mensaje con el ganador.
 
-# Crea un tablero de 6 filas y 7 columnas
-filas, columnas = 6, 7
-tablero = [[0] * 6 for i in range(7)]
+import numpy as np
 
-# Función para dejar caer una ficha en una columna
-def dejar_ficha(tablero, fila, columna, ficha):
-    tablero[fila][columna] = ficha
+def create_board():
+    board = np.zeros((6, 7))
+    return board
 
-# Función para verificar si una columna está llena
-def columna_llena(tablero, columna):
-    return tablero[0][columna] != 0
+def drop_piece(board, row, col, piece):
+    board[row][col] = piece
 
-# Función para obtener la primera fila vacía en una columna
-def obtener_fila_vacia(tablero, columna):
-    for fila in range(filas-1, -1, -1):
-        if tablero[fila][columna] == 0:
-            return fila
+def is_valid_location(board, col):
+    return board[5][col] == 0
 
-# Función para verificar si alguien ganó
-def ganador(tablero, ficha):
-    # Verifica las victorias horizontales
-    for fila in range(filas):
-        for columna in range(columnas-3):
-            if tablero[fila][columna] == ficha and tablero[fila][columna+1] == ficha and tablero[fila][columna+2] == ficha and tablero[fila][columna+3] == ficha:
+def get_next_open_row(board, col):
+    for r in range(6):
+        if board[r][col] == 0:
+            return r
+
+def print_board(board):
+    print(np.flip(board, 0))
+
+def winning_move(board, piece):
+    # Check horizontal locations for win
+    for c in range(4):
+        for r in range(6):
+            if board[r][c] == piece and board[r][c+1] == piece and board[r][c+2] == piece and board[r][c+3] == piece:
                 return True
 
-    # Verifica las victorias verticales
-    for fila in range(filas-3):
-        for columna in range(columnas):
-            if tablero[fila][columna] == ficha and tablero[fila+1][columna] == ficha and tablero[fila+2][columna] == ficha and tablero[fila+3][columna] == ficha:
+    # Check vertical locations for win
+    for c in range(7):
+        for r in range(3):
+            if board[r][c] == piece and board[r+1][c] == piece and board[r+2][c] == piece and board[r+3][c] == piece:
                 return True
 
-    # Verifica las victorias diagonales hacia arriba
-    for fila in range(3, filas):
-        for columna in range(columnas-3):
-            if tablero[fila][columna] == ficha and tablero[fila-1][columna+1] == ficha and tablero[fila-2][columna+2] == ficha and tablero[fila-3][columna+3] == ficha:
+    # Check positively sloped diagonals
+    for c in range(4):
+        for r in range(3):
+            if board[r][c] == piece and board[r+1][c+1] == piece and board[r+2][c+2] == piece and board[r+3][c+3] == piece:
                 return True
 
-    # Verifica las victorias diagonales hacia abajo
-    for fila in range(filas-3):
-        for columna in range(columnas-3):
-            if tablero[fila][columna] == ficha and tablero[fila+1][columna+1] == ficha and tablero[fila+2][columna+2] == ficha and tablero[fila+3][columna+3] == ficha:
+    # Check negatively sloped diagonals
+    for c in range(4):
+        for r in range(3, 6):
+            if board[r][c] == piece and board[r-1][c+1] == piece and board[r-2][c+2] == piece and board[r-3][c+3] == piece:
                 return True
 
-# Loop principal del juego
-game_over = False
-turno = 0
+def play_game():
+    board = create_board()
+    game_over = False
+    turn = 0
 
-while not game_over:
-    # Turno del jugador 1
-    if turno == 0:
-        columna = int(input("Jugador 1, elige una columna (0-6): "))
+    while not game_over:
+        # Player 1 input
+        if turn == 0:
+            col = int(input("Player 1 make your selection (0-6): "))
+            if is_valid_location(board, col):
+                row = get_next_open_row(board, col)
+                drop_piece(board, row, col, 1)
 
-        if not columna_llena(tablero, columna):
-            fila = obtener_fila_vacia(tablero, columna)
-            dejar_ficha(tablero, fila, columna, 1)
+                if winning_move(board, 1):
+                    print("Player 1 wins!")
+                    game_over = True
 
-            if ganador(tablero, 1):
-                print("¡Jugador 1 gana!")
-                game_over = True
+        # Player 2 input
+        else:
+            col = int(input("Player 2 make your selection (0-6): "))
+            if is_valid_location(board, col):
+                row = get_next_open_row(board, col)
+                drop_piece(board, row, col, 2)
 
-    # Turno del jugador 2
-    else:
-        columna = int(input("Jugador 2, elige una columna (0-6): "))
+                if winning_move(board, 2):
+                    print("Player 2 wins!")
+                    game_over = True
+
+        print_board(board)
+        turn += 1
+        turn %= 2
+
+play_game()
