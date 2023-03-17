@@ -7,7 +7,11 @@
     <title>Document</title>
 </head>
 <body>
+    {% load static %}
+    <!--
+    <img src="{% static 'webapp/ejemplo.jpg' %}" alt="Aqui deberia tener una imagen">-->
     <h1>Listado de Personas</h1>
+    <a href="nuevaPersona">Agregar</a>
     <table border = "1">
         <thead>
             <tr>
@@ -25,9 +29,9 @@
                     <td>{{persona.id}}</td>
                     <td>{{persona.nombre}}{{persona.apellido}}</td>
                     <td>{{persona.email}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><a href="detallePersona/{{persona.id}}">Detalle</a></td>
+                    <td><a href="editarPersona/{{persona.id}}">Editar</a></td>
+                    <td><a href="eliminarPersona/{{persona.id}}">Eliminar</a></td>
                 </tr>
             {% endfor %}
         </tbody>

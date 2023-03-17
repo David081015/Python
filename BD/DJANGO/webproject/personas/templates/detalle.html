@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>
+        {{persona.id}}
+        {{persona.nombre}}
+        {{persona.apellido}}
+        {{persona.email}}
+    </h1>
+    <a href="{% url 'indexPersonas'%}">Regresar al listado</a>
+{% endblock %}

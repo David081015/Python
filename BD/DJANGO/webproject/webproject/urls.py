@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from webapp.views import index, indexPersonas
+from personas.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',index,name='index'),
-    path('indexPersonas',indexPersonas)
+    path('indexPersonas',indexPersonas,name='indexPersonas'),
+    path('nuevaPersona',nuevaPersona),
+    path('editarPersona/<int:id>',editarPersona),
+    path('eliminarPersona/<int:id>',eliminarPersona),
+    path('detallePersona/<int:id>',detallePersona)
 ]
