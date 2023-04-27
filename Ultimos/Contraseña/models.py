@@ -22,7 +22,7 @@ class Usuario(db.Model):
     def encode_auth_token(self,user_id):
         try:
             payload={
-                'exp':datetime.datetime.utcnow()+datetime.datetime(days=0,minutes=10),
+                'exp':datetime.datetime.utcnow()+datetime.timedelta(days=0,minutes=10),
                 'iat':datetime.datetime.utcnow(),
                 'sub':user_id
             }

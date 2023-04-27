@@ -21,3 +21,20 @@ def registro():
     else:
         mensaje = "Usuario existe"
     return jsonify({"message":mensaje})
+
+@appuser.route('/login',methods=["POST"])
+def login():
+    user = request.get_json()
+    usuario = Usuario(email=user["email"], password=user['password'])
+    searchUser = Usuario.query.filter_by(email = usuario.email).first()
+    if searchUser:
+        validation = bcrypt.check_password_hash(searchUser.password,user["password"])
+        if validation:
+            auth = usuario.encode_auth_token(user_id=searchUser.id)
+            response = {
+                "status":"success",
+                "message":"Login exitoso",
+                "auth_token":auth
+            }
+            return jsonify(response)
+    return jsonify({"message":"Datos incorrectos"})
