@@ -10,7 +10,7 @@ class Imagenes(db.Model):
     data = db.Column(db.LargeBinary,nullable=False)
     rendered_data = db.Column(db.Text,nullable=False)
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
-    region = db.relationship('Users',backref='users')
+    region = db.relationship('Usuario',backref='users')
 
 class Usuario(db.Model):
     __tablename__="users"
