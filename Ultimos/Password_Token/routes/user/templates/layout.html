@@ -12,20 +12,22 @@
 </body>
 <script>
     function checkToken(){
-        const token = localStorage.getItem('token')
+        const token  = localStorage.getItem('token')
         if(token){
-            fetch('/login/user?token=${token}')
+            fetch(`/login/user?token=${token}`)
             .then(response => response.json())
             .then(data =>{
                 console.log(data)
                 if(data.message!="valid token"){
                     localStorage.removeItem('token')
-                    window.location.href('/login/user')
+                    window.location.href='/login/user'
                 }
-            }).catch(error=>{
-                window.location.href= '/login/user'
-                                                                                              
+            }).catch(error =>{
+                window.location.href='/login/user'
+                console.log(error)
             })
+        }else{
+            window.location.href='/login/user'
         }
     }
 </script>

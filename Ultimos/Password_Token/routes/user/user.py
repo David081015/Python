@@ -1,36 +1,38 @@
-from flask import Blueprint,request,jsonify, render_template
-from sqlalchemy import exc
+from flask import Blueprint,request,jsonify,render_template
+from sqlalchemy import exc 
 from models import Usuario
 from app import db,bcrypt
-from auth import tokenCheck, verificarToken
+from auth import tokenCheck,verificarToken
 
-appuser = Blueprint('appuser',__name__,template_folder='templates')
+appuser=Blueprint('appuser',__name__,template_folder='templates')
+
 
 @appuser.route('/registro',methods=["POST"])
 def registro():
     user = request.get_json()
-    userExists = Usuario.query.filter_by(email=user['email']).first()
+    userExists =Usuario.query.filter_by(email=user['email']).first()
     if not userExists:
         usuario = Usuario(email=user['email'],password=user['password'])
         try:
             db.session.add(usuario)
             db.session.commit()
-            mensaje = "Usuario creado"
+            mensaje="Usuario creado"
         except exc.SQLAlchemyError as e:
-            mensaje = e
+            mensaje  = e
     else:
-        mensaje = "Usuario existe"
+        mensaje = "Usuario existente"  
     return jsonify({"message":mensaje})
 
 @appuser.route('/login',methods=["POST"])
 def login():
     user = request.get_json()
-    usuario = Usuario(email=user["email"], password=user['password'])
-    searchUser = Usuario.query.filter_by(email = usuario.email).first()
+    usuario = Usuario(email=user["email"],password=user["password"])
+    searchUser = Usuario.query.filter_by(email=usuario.email).first()
     if searchUser:
         validation = bcrypt.check_password_hash(searchUser.password,user["password"])
         if validation:
             auth = usuario.encode_auth_token(user_id=searchUser.id)
+            print(auth)
             response = {
                 "status":"success",
                 "message":"Login exitoso",
@@ -39,10 +41,12 @@ def login():
             return jsonify(response)
     return jsonify({"message":"Datos incorrectos"})
 
+
 @appuser.route('/usuarios',methods=["GET"])
 @tokenCheck
 def getUsers(usuario):
-    if usuario['admin']:
+    print(usuario)
+    if(usuario['admin']):
         response=[]
         usuarios = Usuario.query.all()
         for usuario in usuarios:
@@ -54,41 +58,41 @@ def getUsers(usuario):
                 'admin':usuario.admin
             }
             response.append(usuarioData)
-        return jsonify({'usuarios':response})
-    else:
-        return jsonify({"message":"Acceso denegado"})
-    
+        return jsonify({'usuarios':response})  
+    else: 
+        return jsonify({"message":"Acceso denegado"}) 
+     
 @appuser.route('/main')
 def main():
     return render_template('main.html')
 
-@appuser.route('/login/user',methods = ["GET","POST"])
+@appuser.route('/login/user',methods=["GET","POST"])
 def login_post():
-    if(request.method=='GET'):
+    if(request.method=="GET"):
         token = request.args.get('token')
         if token:
             info = verificarToken(token)
-            if(info['status'] != 'fail'):
-                responseObject = {
+            if(info['status']!='fail'):
+                responseObject={
                     'status':'success',
                     'message':'valid token',
                     'info':info
                 }
                 return jsonify(responseObject)
-        return render_template('login.html') 
+        return render_template('login.html')
     else:
         email = request.json['email']
-        password = request.json['password']
+        password=request.json['password']
         usuario = Usuario(email=email,password=password)
-        userFilter = Usuario.query.filter_by(email=usuario.email).first()
+        userFilter=Usuario.query.filter_by(email=usuario.email).first()
         if userFilter:
-            validation = bcrypt.check_password_hash(userFilter.password,password)
+            validation=bcrypt.check_password_hash(userFilter.password,password)
             if validation:
                 auth_token = usuario.encode_auth_token(userFilter.id)
-                response = {
+                response= {
                     'status':'success',
                     'message':'Loggin exitoso',
-                    'auth_token':auth_token
+                    'auth_token':auth_token,
                 }
                 return jsonify(response)
-        return jsonify({'message':'Datos incorrectos'})
+        return jsonify({"message":"Datos incorrectos"})
